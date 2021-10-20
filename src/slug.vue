@@ -28,7 +28,7 @@
 		<span v-else class="link" @click="isEditing = true">{{ finalLink }}</span>
 
 		<v-button v-if="!disabled" v-tooltip="t('edit')" x-small secondary icon @click="isEditing = true">
-			<v-icon name="keyboard_return" />
+			<v-icon name="edit" />
 		</v-button>
 	</div>
 </template>
@@ -87,10 +87,6 @@ export default defineComponent({
 			type: Boolean,
 			default: false,
 		},
-		slug: {
-			type: Boolean,
-			default: false,
-		},
 		update: {
 			type: Array,
 			default: () => [],
@@ -98,7 +94,7 @@ export default defineComponent({
 	},
 	emits: ['input'],
 	setup(props, { emit }) {
-		const { t } = useI18n();
+		const { t, locale } = useI18n();
 
 		const values = inject('values', ref<Record<string, any>>({}));
 		const isEditing = ref(props.autofocus);
@@ -120,11 +116,19 @@ export default defineComponent({
 			}
 		});
 
-		const finalLink = computed(() => {
-			return `${props.prefix || ''}${props.value || props.placeholder || ''}${props.suffix || ''}`;
-		});
+		const prefix = computed(() => render(props.prefix || '', values.value))
+		const suffix = computed(() => render(props.suffix || '', values.value))
+		const finalLink = computed(() => `${prefix.value}${props.value || props.placeholder || ''}${suffix.value}`)
 
-		return { t, isEditing, onChange, onKeyPress, finalLink };
+		return {
+			t,
+			suffix,
+			prefix,
+			finalLink,
+			isEditing,
+			onChange,
+			onKeyPress,
+		};
 
 		function onKeyPress(event: KeyboardEvent) {
 			if (event.key === 'Escape') {
@@ -142,7 +146,7 @@ export default defineComponent({
 		}
 
 		function transform(value: string) {
-			return slugify(value, { separator: '-' }).slice(0, props.length);
+			return slugify(value, { separator: '-', preserveTrailingDash: true }).slice(0, props.length);
 		}
 	},
 });

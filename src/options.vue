@@ -51,9 +51,12 @@ export default defineComponent({
 				type: 'string',
 				name: '$t:prefix',
 				meta: {
-					interface: 'input',
 					width: 'half',
+					interface: 'system-display-template',
+					required: true,
 					options: {
+						collectionName: props.collection,
+						font: 'monospace',
 						placeholder: 'http://example.com/',
 					},
 				},
@@ -63,9 +66,12 @@ export default defineComponent({
 				type: 'string',
 				name: '$t:suffix',
 				meta: {
-					interface: 'input',
 					width: 'half',
+					interface: 'system-display-template',
+					required: true,
 					options: {
+						collectionName: props.collection,
+						font: 'monospace',
 						placeholder: '/',
 					},
 				},
@@ -87,7 +93,6 @@ export default defineComponent({
 					width: 'full',
 					interface: 'system-display-template',
 					required: true,
-
 					options: {
 						collectionName: props.collection,
 						font: 'monospace',
