@@ -1,6 +1,6 @@
 <template>
 	<v-input
-		v-if="isEditing"
+		v-if="isEditing && !disabled"
 		:autofocus="true"
 		:model-value="value"
 		:placeholder="placeholder"
@@ -23,9 +23,8 @@
 	<div v-else class="link-preview-mode">
 		<v-icon v-if="iconLeft" :name="iconLeft" />
 
-		<span v-if="disabled" class="link">{{ finalLink }}</span>
-		<a v-else-if="value && prefix" target="_blank" class="link" :href="finalLink">{{ finalLink }}</a>
-		<span v-else class="link" @click="isEditing = true">{{ finalLink }}</span>
+		<a v-if="value && prefix" target="_blank" class="link" :href="finalLink">{{ finalLink }}</a>
+		<span v-else class="link" @click="!disabled && (isEditing = true)">{{ finalLink }}</span>
 
 		<v-button v-if="!disabled" v-tooltip="t('edit')" x-small secondary icon @click="isEditing = true">
 			<v-icon name="edit" />
@@ -94,8 +93,7 @@ export default defineComponent({
 	},
 	emits: ['input'],
 	setup(props, { emit }) {
-		const { t, locale } = useI18n();
-
+		const { t } = useI18n();
 		const values = inject('values', ref<Record<string, any>>({}));
 		const isEditing = ref(props.autofocus);
 		const isTouched = ref(false);
@@ -140,6 +138,7 @@ export default defineComponent({
 		}
 
 		function onChange(value: string) {
+			if (props.disabled) return;
 			if (props.value === value) return;
 			isTouched.value = true;
 			emit('input', transform(value));

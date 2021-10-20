@@ -47,11 +47,35 @@ export default defineComponent({
 				},
 			},
 			{
+				field: 'template',
+				type: 'string',
+				name: '$t:template',
+				meta: {
+					width: 'full',
+					interface: 'system-display-template',
+					required: true,
+					options: {
+						collectionName: props.collection,
+						font: 'monospace',
+						placeholder: '{{ title }}-{{ id }}',
+					},
+				},
+			},
+			{
+				field: 'iconLeft',
+				name: '$t:icon_left',
+				type: 'string',
+				meta: {
+					width: 'half',
+					interface: 'select-icon',
+				},
+			},
+			{
 				field: 'prefix',
 				type: 'string',
 				name: '$t:prefix',
 				meta: {
-					width: 'half',
+					width: 'full',
 					interface: 'system-display-template',
 					required: true,
 					options: {
@@ -66,37 +90,13 @@ export default defineComponent({
 				type: 'string',
 				name: '$t:suffix',
 				meta: {
-					width: 'half',
-					interface: 'system-display-template',
-					required: true,
-					options: {
-						collectionName: props.collection,
-						font: 'monospace',
-						placeholder: '/',
-					},
-				},
-			},
-			{
-				field: 'iconLeft',
-				name: '$t:icon_left',
-				type: 'string',
-				meta: {
-					width: 'half',
-					interface: 'select-icon',
-				},
-			},
-			{
-				field: 'template',
-				type: 'string',
-				name: '$t:template',
-				meta: {
 					width: 'full',
 					interface: 'system-display-template',
 					required: true,
 					options: {
 						collectionName: props.collection,
 						font: 'monospace',
-						placeholder: '{{ title }}-{{ id }}',
+						placeholder: '/',
 					},
 				},
 			},
