@@ -1,6 +1,6 @@
 {
   "name": "directus-extension-wpslug-interface",
-  "version": "1.0.0-rc.99",
+  "version": "1.0.0-beta.3",
   "author": {
     "email": "dimitrov.adrian+gh@gmail.com",
     "name": "Adrian Dimitrov"
@@ -18,7 +18,7 @@
     "type": "interface",
     "path": "dist/index.js",
     "source": "src/index.ts",
-    "host": "^v9.0.0-rc.94",
+    "host": "^v9.0.0-rc.98",
     "hidden": false
   },
   "files": [
