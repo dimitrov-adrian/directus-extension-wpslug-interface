@@ -95,10 +95,10 @@ export default defineComponent({
 	setup(props, { emit }) {
 		const { t } = useI18n();
 		const values = inject('values', ref<Record<string, any>>({}));
-		const isEditing = ref(props.autofocus);
-		const isTouched = ref(false);
+		const isEditing = ref<Boolean>(props.autofocus);
+		const isTouched = ref<Boolean>(false);
 
-		watch(values, (values) => {
+		watch(values, (values: Record<string, any>) => {
 			// Reject manual touching.
 			if (isEditing.value || isTouched.value) return;
 
@@ -140,8 +140,8 @@ export default defineComponent({
 		function onChange(value: string) {
 			if (props.disabled) return;
 			if (props.value === value) return;
-			isTouched.value = true;
-			emit('input', transform(value));
+			isTouched.value = Boolean(value && value.trim());
+			emit('input', transform(value || ''));
 		}
 
 		function transform(value: string) {
