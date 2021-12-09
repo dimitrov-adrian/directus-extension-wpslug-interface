@@ -18,7 +18,7 @@
     "type": "interface",
     "path": "dist/index.js",
     "source": "src/index.ts",
-    "host": "^v9.0.0-rc.98",
+    "host": "^v9.0.0",
     "hidden": false
   },
   "files": [
@@ -39,6 +39,7 @@
     "stylelint-config-rational-order": "^0.1.2",
     "stylelint-config-standard": "^22.0.0",
     "stylelint-order": "^4.1.0",
-    "stylelint-scss": "^3.21.0"
+    "stylelint-scss": "^3.21.0",
+    "typescript": "4.5.2"
   }
 }
