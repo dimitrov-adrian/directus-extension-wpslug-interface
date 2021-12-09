@@ -1,6 +1,6 @@
 {
   "name": "directus-extension-wpslug-interface",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0",
   "author": {
     "email": "dimitrov.adrian+gh@gmail.com",
     "name": "Adrian Dimitrov"
@@ -28,11 +28,11 @@
     "build": "directus-extension build"
   },
   "devDependencies": {
-    "@directus/extensions-sdk": "^9.0.0-rc.98",
+    "@directus/extensions-sdk": "^9.2.1",
     "@sindresorhus/slugify": "^2.1.0",
-    "eslint-config-prettier": "8.3.0",
-    "eslint-plugin-prettier": "4.0.0",
-    "eslint-plugin-vue": "7.19.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-vue": "^8.2.0",
     "micromustache": "^8.0.3",
     "prettier": "^2.4.1",
     "stylelint-config-prettier": "^8.0.2",

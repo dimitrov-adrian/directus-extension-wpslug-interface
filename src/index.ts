@@ -1,13 +1,100 @@
-import { defineInterface } from '@directus/shared/utils';
+import { InterfaceConfig } from '@directus/shared/types';
 import InterfaceSlug from './slug.vue';
-import Options from './options.vue';
 
-export default defineInterface({
-	id: 'directus-extension-wpslug-interface',
+export default {
+	id: 'extension-wpslug',
 	name: 'Slug',
 	description: 'WordPress alike slug/permalink interface',
 	icon: 'link',
 	component: InterfaceSlug,
 	types: ['string'],
-	options: Options,
-});
+	group: 'standard',
+	options: ({ collection }) => {
+		return [
+			{
+				field: 'placeholder',
+				name: '$t:placeholder',
+				meta: {
+					width: 'full',
+					interface: 'input',
+					options: {
+						placeholder: '$t:enter_a_placeholder',
+					},
+				},
+			},
+			{
+				field: 'template',
+				type: 'string',
+				name: '$t:template',
+				meta: {
+					width: 'full',
+					interface: 'system-display-template',
+					required: true,
+					options: {
+						collectionName: collection,
+						font: 'monospace',
+						placeholder: '{{ title }}-{{ id }}',
+					},
+				},
+			},
+			{
+				field: 'iconLeft',
+				name: '$t:icon_left',
+				type: 'string',
+				meta: {
+					width: 'half',
+					interface: 'select-icon',
+				},
+			},
+			{
+				field: 'prefix',
+				type: 'string',
+				name: '$t:prefix',
+				meta: {
+					width: 'full',
+					interface: 'system-display-template',
+					required: true,
+					options: {
+						collectionName: collection,
+						font: 'monospace',
+						placeholder: 'http://example.com/',
+					},
+				},
+			},
+			{
+				field: 'suffix',
+				type: 'string',
+				name: '$t:suffix',
+				meta: {
+					width: 'full',
+					interface: 'system-display-template',
+					required: true,
+					options: {
+						collectionName: collection,
+						font: 'monospace',
+						placeholder: '/',
+					},
+				},
+			},
+			{
+				field: 'update',
+				name: '$t:update',
+				type: 'json',
+				meta: {
+					width: 'half',
+					interface: 'select-multiple-checkbox',
+					default_value: 'normal',
+					options: {
+						choices: [
+							{ text: '$t:on_create', value: 'create' },
+							{ text: '$t:on_update', value: 'update' },
+						],
+					},
+				},
+				schema: {
+					default_value: '[]',
+				},
+			},
+		];
+	},
+} as InterfaceConfig;

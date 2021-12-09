@@ -23,17 +23,21 @@
 	<div v-else class="link-preview-mode">
 		<v-icon v-if="iconLeft" :name="iconLeft" />
 
-		<a v-if="value && prefix" target="_blank" class="link" :href="finalLink">{{ finalLink }}</a>
-		<span v-else class="link" @click="!disabled && (isEditing = true)">{{ finalLink }}</span>
+		<a v-if="value && prefix" target="_blank" class="link" :href="presentedLink">{{ presentedLink }}</a>
+		<span v-else class="link" @click="!disabled && (isEditing = true)">{{ presentedLink }}</span>
 
 		<v-button v-if="!disabled" v-tooltip="t('edit')" x-small secondary icon @click="isEditing = true">
 			<v-icon name="edit" />
+		</v-button>
+
+		<v-button v-if="haveChange" v-tooltip="t('auto_generate')" x-small secondary icon @click="setByCurrentState">
+			<v-icon name="auto_fix_high" />
 		</v-button>
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, inject, watch, computed } from 'vue';
+import { defineComponent, ref, inject, watch, computed, PropType } from 'vue';
 import { render } from 'micromustache';
 import slugify from '@sindresorhus/slugify';
 import { useI18n } from 'vue-i18n';
@@ -87,7 +91,7 @@ export default defineComponent({
 			default: false,
 		},
 		update: {
-			type: Array,
+			type: Array as PropType<string[]>,
 			default: () => [],
 		},
 	},
@@ -97,6 +101,11 @@ export default defineComponent({
 		const values = inject('values', ref<Record<string, any>>({}));
 		const isEditing = ref<Boolean>(props.autofocus);
 		const isTouched = ref<Boolean>(false);
+
+		const prefix = computed(() => render(props.prefix || '', values.value));
+		const suffix = computed(() => render(props.suffix || '', values.value));
+		const presentedLink = computed(() => `${prefix.value}${props.value || props.placeholder || ''}${suffix.value}`);
+		const haveChange = computed(() => props.value && transform(render(props.template, values.value)) !== props.value);
 
 		watch(values, (values: Record<string, any>) => {
 			// Reject manual touching.
@@ -108,22 +117,17 @@ export default defineComponent({
 			// Avoid self update.
 			if (values[props.field] && values[props.field] !== props.value) return;
 
-			const newValue = transform(render(props.template, values));
-			if (newValue !== props.value) {
-				emit('input', newValue);
-			}
+			emitter(values);
 		});
-
-		const prefix = computed(() => render(props.prefix || '', values.value))
-		const suffix = computed(() => render(props.suffix || '', values.value))
-		const finalLink = computed(() => `${prefix.value}${props.value || props.placeholder || ''}${suffix.value}`)
 
 		return {
 			t,
 			suffix,
 			prefix,
-			finalLink,
+			presentedLink,
 			isEditing,
+			haveChange,
+			setByCurrentState,
 			onChange,
 			onKeyPress,
 		};
@@ -140,12 +144,25 @@ export default defineComponent({
 		function onChange(value: string) {
 			if (props.disabled) return;
 			if (props.value === value) return;
+
 			isTouched.value = Boolean(value && value.trim());
+
 			emit('input', transform(value || ''));
 		}
 
 		function transform(value: string) {
 			return slugify(value, { separator: '-', preserveTrailingDash: true }).slice(0, props.length);
+		}
+
+		function setByCurrentState() {
+			emitter(values.value);
+		}
+
+		function emitter(values: Record<string, any>) {
+			const newValue = transform(render(props.template, values));
+			if (newValue === props.value) return;
+
+			emit('input', newValue);
 		}
 	},
 });
