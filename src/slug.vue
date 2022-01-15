@@ -12,12 +12,12 @@
 		@blur="isEditing = false"
 		@keyup="onKeyPress"
 	>
-		<template v-if="iconLeft || prefix" #prepend>
+		<template v-if="iconLeft || renderedPrefix" #prepend>
 			<v-icon v-if="iconLeft" :name="iconLeft" />
-			<span class="prefixsuffix">{{ prefix }}</span>
+			<span class="prefixsuffix">{{ renderedPrefix }}</span>
 		</template>
-		<template v-if="suffix" #append>
-			<span class="prefixsuffix">{{ suffix }}</span>
+		<template v-if="renderedSuffix" #append>
+			<span class="prefixsuffix">{{ renderedSuffix }}</span>
 		</template>
 	</v-input>
 	<div v-else class="link-preview-mode">
@@ -99,12 +99,14 @@ export default defineComponent({
 	setup(props, { emit }) {
 		const { t } = useI18n();
 		const values = inject('values', ref<Record<string, any>>({}));
-		const isEditing = ref<Boolean>(props.autofocus);
-		const isTouched = ref<Boolean>(false);
+		const isEditing = ref<boolean>(props.autofocus);
+		const isTouched = ref<boolean>(false);
 
-		const prefix = computed(() => render(props.prefix || '', values.value));
-		const suffix = computed(() => render(props.suffix || '', values.value));
-		const presentedLink = computed(() => `${prefix.value}${props.value || props.placeholder || ''}${suffix.value}`);
+		const renderedPrefix = computed(() => render(props.prefix || '', values.value));
+		const renderedSuffix = computed(() => render(props.suffix || '', values.value));
+		const presentedLink = computed(
+			() => renderedPrefix.value + (props.value || props.placeholder || '') + renderedSuffix.value
+		);
 		const haveChange = computed(() => props.value && transform(render(props.template, values.value)) !== props.value);
 
 		watch(values, (values: Record<string, any>) => {
@@ -122,8 +124,8 @@ export default defineComponent({
 
 		return {
 			t,
-			suffix,
-			prefix,
+			renderedSuffix,
+			renderedPrefix,
 			presentedLink,
 			isEditing,
 			haveChange,
