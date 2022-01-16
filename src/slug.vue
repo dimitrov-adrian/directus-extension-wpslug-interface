@@ -21,12 +21,20 @@
 		</template>
 	</v-input>
 	<div v-else class="link-preview-mode">
-		<v-icon v-if="iconLeft" :name="iconLeft" />
+		<v-icon v-if="iconLeft" :name="iconLeft" class="icon-left" />
 
 		<a v-if="value && prefix" target="_blank" class="link" :href="presentedLink">{{ presentedLink }}</a>
 		<span v-else class="link" @click="!disabled && (isEditing = true)">{{ presentedLink }}</span>
 
-		<v-button v-if="!disabled" v-tooltip="t('edit')" x-small secondary icon @click="isEditing = true">
+		<v-button
+			v-if="!disabled"
+			v-tooltip="t('edit')"
+			x-small
+			secondary
+			icon
+			class="action-button"
+			@click="isEditing = true"
+		>
 			<v-icon name="edit" />
 		</v-button>
 
@@ -36,6 +44,7 @@
 			x-small
 			secondary
 			icon
+			class="action-button"
 			@click="setByCurrentState"
 		>
 			<v-icon name="auto_fix_high" />
@@ -108,10 +117,9 @@ export default defineComponent({
 		const values = inject('values', ref<Record<string, any>>({}));
 		const isEditing = ref<boolean>(props.autofocus);
 		const isTouched = ref<boolean>(false);
-
-		const renderedPrefix = computed(() => render(props.prefix || '', values.value));
-		const renderedSuffix = computed(() => render(props.suffix || '', values.value));
-		const presentedLink = computed(
+		const renderedPrefix = computed<string>(() => render(props.prefix || '', values.value));
+		const renderedSuffix = computed<string>(() => render(props.suffix || '', values.value));
+		const presentedLink = computed<string>(
 			() => renderedPrefix.value + (props.value || props.placeholder || '') + renderedSuffix.value
 		);
 		const haveChange = computed<boolean>(() => transform(render(props.template, values.value)) !== (props.value || ''));
@@ -191,17 +199,17 @@ export default defineComponent({
 	min-height: var(--input-height);
 }
 
+.icon-left {
+	margin-right: 8px;
+}
+
+.action-button {
+	margin-left: 8px;
+}
+
 .link {
 	color: var(--foreground-subdued);
 	text-decoration: underline;
-}
-
-.link:not(:first-child) {
-	margin-inline-start: 8px;
-}
-
-.link:not(:last-child) {
-	margin-inline-end: 8px;
 }
 
 a.link {
