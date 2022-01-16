@@ -108,7 +108,7 @@ export default defineComponent({
 		},
 		update: {
 			type: Array as PropType<string[]>,
-			default: () => [],
+			default: () => ['create'],
 		},
 	},
 	emits: ['input'],
@@ -132,7 +132,7 @@ export default defineComponent({
 			if (!(props.primaryKey !== '+' ? props.update.includes('update') : props.update.includes('create'))) return;
 
 			// Avoid self update.
-			if (values[props.field] && values[props.field] !== props.value) return;
+			if (values[props.field] && values[props.field] !== (props.value || '')) return;
 
 			emitter(values);
 		});
@@ -180,7 +180,7 @@ export default defineComponent({
 
 		function emitter(values: Record<string, any>) {
 			const newValue = transform(render(props.template, values));
-			if (newValue === props.value) return;
+			if (newValue === (props.value || '')) return;
 
 			emit('input', newValue);
 		}

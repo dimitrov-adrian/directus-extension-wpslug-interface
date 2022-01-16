@@ -25,12 +25,12 @@ Restart directus
 
 Simply these options enables/disables the automatic update based on content change.
 
-- Having "Create" will enable automattic updating when creating new item.
-- Having "Update" will enable automattic updating when editing existing item.
+- Having "On Create" will enable automattic updating when creating new item.
+- Having "On Update" will enable automattic updating when editing existing item.
 
 It's possible to have both, one or none, depending of your needs.
 
-### There is magick stick appearing
+### There is magic wand appearing
 
 The magic stick button appears when the automatic updates are disabled, but there is content change so the field is
 differing from the template. When clicked, the automatic update will be executed.

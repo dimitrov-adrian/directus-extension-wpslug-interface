@@ -83,7 +83,6 @@ export default {
 				meta: {
 					width: 'half',
 					interface: 'select-multiple-checkbox',
-					default_value: ['create', 'update'],
 					options: {
 						choices: [
 							{ text: '$t:on_create', value: 'create' },
@@ -92,7 +91,7 @@ export default {
 					},
 				},
 				schema: {
-					default_value: '',
+					default_value: ['create'],
 				},
 			},
 		];
