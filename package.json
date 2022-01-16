@@ -1,6 +1,6 @@
 {
   "name": "directus-extension-wpslug-interface",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "email": "dimitrov.adrian+gh@gmail.com",
     "name": "Adrian Dimitrov"
@@ -33,7 +33,7 @@
     "@sindresorhus/slugify": "^2.1.0",
     "directus-codestyle": "github:dimitrov-adrian/directus-codestyle",
     "micromustache": "^8.0.3",
-    "typescript": "4.5.2"
+    "typescript": "^4.5.2"
   },
   "prettier": "directus-codestyle/prettier",
   "stylelint": {
