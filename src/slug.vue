@@ -30,7 +30,14 @@
 			<v-icon name="edit" />
 		</v-button>
 
-		<v-button v-if="haveChange" v-tooltip="t('auto_generate')" x-small secondary icon @click="setByCurrentState">
+		<v-button
+			v-if="haveChange && !isTouched"
+			v-tooltip="t('auto_generate')"
+			x-small
+			secondary
+			icon
+			@click="setByCurrentState"
+		>
 			<v-icon name="auto_fix_high" />
 		</v-button>
 	</div>
@@ -107,7 +114,7 @@ export default defineComponent({
 		const presentedLink = computed(
 			() => renderedPrefix.value + (props.value || props.placeholder || '') + renderedSuffix.value
 		);
-		const haveChange = computed(() => props.value && transform(render(props.template, values.value)) !== props.value);
+		const haveChange = computed<boolean>(() => transform(render(props.template, values.value)) !== (props.value || ''));
 
 		watch(values, (values: Record<string, any>) => {
 			// Reject manual touching.
@@ -127,6 +134,7 @@ export default defineComponent({
 			renderedSuffix,
 			renderedPrefix,
 			presentedLink,
+			isTouched,
 			isEditing,
 			haveChange,
 			setByCurrentState,
@@ -149,6 +157,7 @@ export default defineComponent({
 
 			isTouched.value = Boolean(value && value.trim());
 
+			// Emit exact value.
 			emit('input', transform(value || ''));
 		}
 
@@ -157,6 +166,7 @@ export default defineComponent({
 		}
 
 		function setByCurrentState() {
+			isTouched.value = false;
 			emitter(values.value);
 		}
 
