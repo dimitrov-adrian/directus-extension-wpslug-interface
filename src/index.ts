@@ -1,7 +1,7 @@
-import { InterfaceConfig } from '@directus/shared/types';
+import { defineInterface } from '@directus/extensions-sdk';
 import InterfaceSlug from './slug.vue';
 
-export default {
+export default defineInterface({
 	id: 'extension-wpslug',
 	name: 'Slug',
 	description: 'WordPress alike slug/permalink interface',
@@ -78,7 +78,7 @@ export default {
 			},
 			{
 				field: 'update',
-				name: '$t:update',
+				name: '$t:auto_generate',
 				type: 'json',
 				meta: {
 					width: 'half',
@@ -96,4 +96,4 @@ export default {
 			},
 		];
 	},
-} as InterfaceConfig;
+});

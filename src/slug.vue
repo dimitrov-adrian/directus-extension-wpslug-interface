@@ -5,7 +5,6 @@
 		:model-value="value"
 		:placeholder="placeholder"
 		:trim="true"
-		:db-safe="true"
 		:slug="true"
 		slug-separator="-"
 		@update:model-value="onChange"
