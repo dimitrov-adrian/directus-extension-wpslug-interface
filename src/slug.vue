@@ -4,11 +4,11 @@
 		:autofocus="true"
 		:model-value="value"
 		:placeholder="placeholder"
-		:trim="true"
+		:trim="trim"
 		:slug="true"
 		slug-separator="-"
 		@update:model-value="onChange"
-		@blur="isEditing = false"
+		@blur="disableEdit"
 		@keyup="onKeyPress"
 	>
 		<template v-if="iconLeft || renderedPrefix" #prepend>
@@ -23,17 +23,9 @@
 		<v-icon v-if="iconLeft" :name="iconLeft" class="icon-left" />
 
 		<a v-if="value && prefix" target="_blank" class="link" :href="presentedLink">{{ presentedLink }}</a>
-		<span v-else class="link" @click="!disabled && (isEditing = true)">{{ presentedLink }}</span>
+		<span v-else class="link" @click="!disabled && enableEdit">{{ presentedLink }}</span>
 
-		<v-button
-			v-if="!disabled"
-			v-tooltip="t('edit')"
-			x-small
-			secondary
-			icon
-			class="action-button"
-			@click="isEditing = true"
-		>
+		<v-button v-if="!disabled" v-tooltip="t('edit')" x-small secondary icon class="action-button" @click="enableEdit">
 			<v-icon name="edit" />
 		</v-button>
 
@@ -52,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, inject, watch, computed, PropType } from 'vue';
+import { defineComponent, ref, inject, nextTick, watch, computed, PropType } from 'vue';
 import { render } from 'micromustache';
 import slugify from '@sindresorhus/slugify';
 import { useI18n } from 'vue-i18n';
@@ -116,6 +108,8 @@ export default defineComponent({
 		const values = inject('values', ref<Record<string, any>>({}));
 		const isEditing = ref<boolean>(props.autofocus);
 		const isTouched = ref<boolean>(false);
+		const cachedValueBeforeEdit = ref<string>(props.value);
+		const trim = ref<boolean>(true);
 		const renderedPrefix = computed<string>(() => render(props.prefix || '', values.value));
 		const renderedSuffix = computed<string>(() => render(props.suffix || '', values.value));
 		const presentedLink = computed<string>(
@@ -143,18 +137,27 @@ export default defineComponent({
 			presentedLink,
 			isTouched,
 			isEditing,
+			trim,
 			haveChange,
 			setByCurrentState,
 			onChange,
 			onKeyPress,
+			enableEdit,
+			disableEdit,
 		};
 
 		function onKeyPress(event: KeyboardEvent) {
 			if (event.key === 'Escape') {
+				// Temporary disable triming to avoid overwriting of the model value by the blur event inside v-input.
+				trim.value = false;
 				isTouched.value = false;
-				isEditing.value = false;
+				emit('input', cachedValueBeforeEdit.value);
+				nextTick(() => {
+					disableEdit();
+					trim.value = true;
+				});
 			} else if (event.key === 'Enter') {
-				isEditing.value = false;
+				disableEdit();
 			}
 		}
 
@@ -182,6 +185,15 @@ export default defineComponent({
 			if (newValue === (props.value || '')) return;
 
 			emit('input', newValue);
+		}
+
+		function enableEdit(): void {
+			cachedValueBeforeEdit.value = props.value;
+			isEditing.value = true;
+		}
+
+		function disableEdit(): void {
+			isEditing.value = false;
 		}
 	},
 });
