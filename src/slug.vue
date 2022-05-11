@@ -111,7 +111,7 @@ export default defineComponent({
 		},
 	},
 	emits: ['input'],
-	setup(props, { emit }) {
+	setup(props, { emit, attrs }) {
 		const { t } = useI18n();
 		const values = inject('values', ref<Record<string, any>>({}));
 		const isEditing = ref<boolean>(props.autofocus);
@@ -119,7 +119,7 @@ export default defineComponent({
 		const renderedPrefix = computed<string>(() => render(props.prefix || '', values.value));
 		const renderedSuffix = computed<string>(() => render(props.suffix || '', values.value));
 		const presentedLink = computed<string>(
-			() => renderedPrefix.value + (props.value || props.placeholder || '') + renderedSuffix.value
+			() => renderedPrefix.value + (props.value || props.placeholder || attrs['field-data']?.meta.field) + renderedSuffix.value
 		);
 		const haveChange = computed<boolean>(() => transform(render(props.template, values.value)) !== (props.value || ''));
 
@@ -131,7 +131,7 @@ export default defineComponent({
 			if (!(props.primaryKey !== '+' ? props.update.includes('update') : props.update.includes('create'))) return;
 
 			// Avoid self update.
-			if (values[props.field] && values[props.field] !== (props.value || '')) return;
+			if (values[props.field] && (values[props.field] || '') !== (props.value || '')) return;
 
 			emitter(values);
 		});
@@ -209,6 +209,7 @@ export default defineComponent({
 .link {
 	color: var(--foreground-subdued);
 	text-decoration: underline;
+	word-break: break-word;
 }
 
 a.link {

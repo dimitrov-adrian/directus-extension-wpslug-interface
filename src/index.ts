@@ -68,7 +68,7 @@ export default defineInterface({
 				meta: {
 					width: 'full',
 					interface: 'system-display-template',
-					required: true,
+					required: false,
 					options: {
 						collectionName: collection,
 						font: 'monospace',
