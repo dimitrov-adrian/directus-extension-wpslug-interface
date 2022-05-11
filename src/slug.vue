@@ -9,7 +9,7 @@
 		slug-separator="-"
 		@update:model-value="onChange"
 		@blur="disableEdit"
-		@keyup="onKeyPress"
+		@keydown="onKeyPress"
 	>
 		<template v-if="iconLeft || renderedPrefix" #prepend>
 			<v-icon v-if="iconLeft" :name="iconLeft" />
