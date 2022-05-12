@@ -30,7 +30,7 @@
 		</v-button>
 
 		<v-button
-			v-if="haveChange && !isTouched"
+			v-if="isDiffer && !isTouched"
 			v-tooltip="t('auto_generate')"
 			x-small
 			secondary
@@ -115,7 +115,11 @@ export default defineComponent({
 		const presentedLink = computed<string>(
 			() => renderedPrefix.value + (props.value || props.placeholder || attrs['field-data']?.meta.field) + renderedSuffix.value
 		);
-		const haveChange = computed<boolean>(() => transform(render(props.template, values.value)) !== (props.value || ''));
+		const isDiffer = computed<boolean>(() => {
+			const transformed = transform(render(props.template, values.value));
+			if (transformed === (props.value || '')) return false;
+			return (transformed !== (props.value || '').replace(/-\d+$/, ''));
+		});
 
 		watch(values, (values: Record<string, any>) => {
 			// Reject manual touching.
@@ -138,7 +142,7 @@ export default defineComponent({
 			isTouched,
 			isEditing,
 			trim,
-			haveChange,
+			isDiffer,
 			setByCurrentState,
 			onChange,
 			onKeyPress,
