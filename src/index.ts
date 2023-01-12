@@ -53,7 +53,6 @@ export default defineInterface({
 				meta: {
 					width: 'full',
 					interface: 'system-display-template',
-					required: true,
 					options: {
 						collectionName: collection,
 						font: 'monospace',
@@ -68,7 +67,6 @@ export default defineInterface({
 				meta: {
 					width: 'full',
 					interface: 'system-display-template',
-					required: false,
 					options: {
 						collectionName: collection,
 						font: 'monospace',

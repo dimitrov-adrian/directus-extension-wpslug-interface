@@ -18,22 +18,23 @@
     "type": "interface",
     "path": "dist/index.js",
     "source": "src/index.ts",
-    "host": "^v9.9.0",
-    "hidden": false
+    "host": "^v9.9.0"
   },
   "files": [
     "dist"
   ],
   "scripts": {
     "build": "directus-extension build",
-    "dev": "directus-extension build --no-minify --watch"
+    "dev": "directus-extension build --no-minify --watch",
+    "link": "directus-extension link"
   },
   "devDependencies": {
-    "@directus/extensions-sdk": "^9.10.0",
+    "@directus/extensions-sdk": "9.22.4",
     "@sindresorhus/slugify": "^2.1.0",
     "directus-codestyle": "dimitrov-adrian/directus-codestyle",
     "micromustache": "^8.0.3",
-    "typescript": "^4.6.4"
+    "typescript": "^4.9.4",
+    "vue": "^3.2.45"
   },
   "prettier": "directus-codestyle/prettier",
   "stylelint": {
