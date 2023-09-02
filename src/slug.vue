@@ -186,7 +186,7 @@ export default defineComponent({
 
 		function emitter(values: Record<string, any>) {
 			const newValue = transform(render(props.template, values));
-			if (newValue === (props.value || '')) return;
+			if (!newValue || (newValue === (props.value || ''))) return;
 
 			emit('input', newValue);
 		}
