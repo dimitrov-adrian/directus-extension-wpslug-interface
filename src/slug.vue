@@ -126,7 +126,7 @@ export default defineComponent({
 			if (isEditing.value || isTouched.value) return;
 
 			// According the update policy.
-			if (!(props.primaryKey !== '+' ? props.update.includes('update') : props.update.includes('create'))) return;
+			if (!(typeof values.id !== 'undefined' ? props.update.includes('update') : props.update.includes('create'))) return;
 
 			// Avoid self update.
 			if (values[props.field] && (values[props.field] || '') !== (props.value || '')) return;
