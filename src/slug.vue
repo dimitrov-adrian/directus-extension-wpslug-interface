@@ -113,12 +113,15 @@ export default defineComponent({
 		const renderedPrefix = computed<string>(() => render(props.prefix || '', values.value));
 		const renderedSuffix = computed<string>(() => render(props.suffix || '', values.value));
 		const presentedLink = computed<string>(
-			() => renderedPrefix.value + (props.value || props.placeholder || attrs['field-data']?.meta.field) + renderedSuffix.value
+			() =>
+				renderedPrefix.value +
+				(props.value || props.placeholder || attrs['field-data']?.meta.field) +
+				renderedSuffix.value
 		);
 		const isDiffer = computed<boolean>(() => {
 			const transformed = transform(render(props.template, values.value));
 			if (transformed === (props.value || '')) return false;
-			return (transformed !== (props.value || '').replace(/-\d+$/, ''));
+			return transformed !== (props.value || '').replace(/-\d+$/, '');
 		});
 
 		watch(values, (values: Record<string, any>) => {
@@ -126,7 +129,8 @@ export default defineComponent({
 			if (isEditing.value || isTouched.value) return;
 
 			// According the update policy.
-			if (!(props.primaryKey !== '+' ? props.update.includes('update') : props.update.includes('create'))) return;
+			if (!(typeof values.id !== 'undefined' ? props.update.includes('update') : props.update.includes('create')))
+				return;
 
 			// Avoid self update.
 			if (values[props.field] && (values[props.field] || '') !== (props.value || '')) return;
@@ -176,6 +180,9 @@ export default defineComponent({
 		}
 
 		function transform(value: string) {
+			// Entferne den Uhrzeit-Anteil aus dem String
+			const regex = /T\d{2}:\d{2}:\d{2}/;
+			value = value.replace(regex, '');
 			return slugify(value, { separator: '-', preserveTrailingDash: true }).slice(0, props.length);
 		}
 
