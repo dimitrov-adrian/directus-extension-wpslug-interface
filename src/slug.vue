@@ -5,7 +5,6 @@
 		:model-value="value"
 		:placeholder="placeholder"
 		:trim="trim"
-		:slug="true"
 		slug-separator="-"
 		@update:model-value="onChange"
 		@blur="disableEdit"
@@ -113,12 +112,15 @@ export default defineComponent({
 		const renderedPrefix = computed<string>(() => render(props.prefix || '', values.value));
 		const renderedSuffix = computed<string>(() => render(props.suffix || '', values.value));
 		const presentedLink = computed<string>(
-			() => renderedPrefix.value + (props.value || props.placeholder || attrs['field-data']?.meta.field) + renderedSuffix.value
+			() =>
+				renderedPrefix.value +
+				(props.value || props.placeholder || attrs['field-data']?.meta.field) +
+				renderedSuffix.value,
 		);
 		const isDiffer = computed<boolean>(() => {
 			const transformed = transform(render(props.template, values.value));
 			if (transformed === (props.value || '')) return false;
-			return (transformed !== (props.value || '').replace(/-\d+$/, ''));
+			return transformed !== (props.value || '').replace(/-\d+$/, '');
 		});
 
 		watch(values, (values: Record<string, any>) => {
@@ -176,7 +178,10 @@ export default defineComponent({
 		}
 
 		function transform(value: string) {
-			return slugify(value, { separator: '-', preserveTrailingDash: true }).slice(0, props.length);
+			return slugify(value, { separator: '-', preserveCharacters: ['/'], preserveTrailingDash: true }).slice(
+				0,
+				props.length,
+			);
 		}
 
 		function setByCurrentState() {
